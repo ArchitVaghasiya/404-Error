@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 Eror! - Personal Expense Tracker</title>
+    <style>
+        :root {
+            --primary: #3498db;
+            --primary-dark: #2980b9;
+            --secondary: #2ecc71;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --dark: #34495e;
+            --light: #ecf0f1;
+            --gray: #95a5a6;
+            --white: #ffffff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            padding: 0 15px;
+            margin: 0 auto;
+            max-width: 1200px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            font-size: 24px;
+            color: var(--primary);
+        }
+        
+        .logo i {
+            margin-right: 10px;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 30px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+        
+        .menu-toggle {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        /* Main Content Styles */
+        .hero {
+            padding: 60px 0;
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        .hero p {
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+        
+        /* Dashboard Grid */
+        .dashboard {
+            padding: 40px 0;
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            gap: 20px;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            background-color: var(--white);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 15px;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--dark);
+            padding: 10px;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+        
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background-color: rgba(52, 152, 219, 0.1);
+            color: var(--primary);
+        }
+        
+        .sidebar-menu i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* Main Dashboard Content */
+        .dashboard-content {
+            display: grid;
+            grid-template-rows: auto auto 1fr;
+            gap: 20px;
+        }
+        
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+        }
+        
+        .stat-card {
+            background-color: var(--white);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .stat-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .stat-card-title {
+            color: var(--gray);
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .stat-card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+        }
+        
+        .stat-card-icon.income {
+            background-color: var(--secondary);
+        }
+        
+        .stat-card-icon.expenses {
+            background-color: var(--danger);
+        }
+        
+        .stat-card-icon.savings {
+            background-color: var(--primary);
+        }
+        
+        .stat-card-icon.budget {
+            background-color: var(--warning);
+        }
+        
+        .stat-card-value {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 5px 0;
+        }
+        
+        .stat-card-change {
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .stat-card-change.positive {
+            color: var(--secondary);
+        }
+        
+        .stat-card-change.negative {
+            color: var(--danger);
+        }
+        
+        /* Charts Section */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+        
+        .chart-container {
+            background-color: var(--white);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .chart-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .chart-options {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chart-option {
+            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .chart-option.active {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+        
+        .chart-area {
+            width: 100%;
+            height: 300px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Recent Transactions */
+        .transactions {
+            background-color: var(--white);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .transactions-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .transactions-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .transaction-list {
+            list-style: none;
+        }
+        
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+        
+        .transaction-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .transaction-category {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #f5f7fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        
+        .transaction-category.food {
+            color: #e67e22;
+        }
+        
+        .transaction-category.transport {
+            color: #9b59b6;
+        }
+        
+        .transaction-category.shopping {
+            color: #3498db;
+        }
+        
+        .transaction-details h4 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        
+        .transaction-date {
+            font-size: 12px;
+            color: var(--gray);
+        }
+        
+        .transaction-amount {
+            font-weight: 600;
+        }
+        
+        .transaction-amount.expense {
+            color: var(--danger);
+        }
+        
+        .transaction-amount.income {
+            color: var(--secondary);
+        }
+        
+        /* Add Expense/Income Modal */
+        .floating-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 99;
+        }
+        
+        .floating-button:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-3px);
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                margin-bottom: 20px;
+            }
+            
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+            
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                background-color: var(--white);
+                width: 100%;
+                flex-direction: column;
+                padding: 20px;
+                box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+                transform: translateY(-150%);
+                transition: transform 0.3s ease-in-out;
+            }
+            
+            .nav-links.active {
+                transform: translateY(0);
+            }
+            
+            .nav-links li {
+                margin: 15px 0;
+                margin-left: 0;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+</head>
+<body>
+    <!-- Header Navigation -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <i class="fas fa-wallet"></i>
+                    404 Error!
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#" class="active">Dashboard</a></li>
+                    <li><a href="#">Transactions</a></li>
+                    <li><a href="#">Budgets</a></li>
+                    <li><a href="#">Reports</a></li>
+                    <li><a href="#" class="btn btn-outline">Sign In</a></li>
+                </ul>
+                <div class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- Main Dashboard Section -->
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>Take Control of Your Finances</h1>
+                <p>Track expenses, set budgets, and achieve your financial goals with our easy-to-use expense tracker</p>
+                <a href="#" class="btn btn-outline">Get Started</a>
+            </div>
+        </section>
+        
+        <section class="dashboard">
+            <div class="container">
+                <div class="dashboard-grid">
+                    <!-- Sidebar Navigation -->
+                    <div class="sidebar">
+                        <ul class="sidebar-menu">
+                            <li><a href="#" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+                            <li><a href="#"><i class="fas fa-exchange-alt"></i> Transactions</a></li>
+                            <li><a href="#"><i class="fas fa-chart-pie"></i> Categories</a></li>
+                            <li><a href="#"><i class="fas fa-bullseye"></i> Budgets</a></li>
+                            <li><a href="#"><i class="fas fa-chart-line"></i> Reports</a></li>
+                            <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Main Dashboard Content -->
+                    <div class="dashboard-content">
+                        <!-- Stats Cards -->
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-card-header">
+                                    <span class="stat-card-title">TOTAL INCOME</span>
+                                    <div class="stat-card-icon income">
+                                        <i class="fas fa-arrow-down"></i>
+                                    </div>
+                                </div>
+                                <div class="stat-card-value">$4,350.00</div>
+                                <div class="stat-card-change positive">
+                                    <i class="fas fa-arrow-up"></i> 12% from last month
+                                </div>
+                            </div>
+                            
+                            <div class="stat-card">
+                                <div class="stat-card-header">
+                                    <span class="stat-card-title">TOTAL EXPENSES</span>
+                                    <div class="stat-card-icon expenses">
+                                        <i class="fas fa-arrow-up"></i>
+                                    </div>
+                                </div>
+                                <div class="stat-card-value">$2,185.75</div>
+                                <div class="stat-card-change negative">
+                                    <i class="fas fa-arrow-up"></i> 8% from last month
+                                </div>
+                            </div>
+                            
+                            <div class="stat-card">
+                                <div class="stat-card-header">
+                                    <span class="stat-card-title">BALANCE</span>
+                                    <div class="stat-card-icon savings">
+                                        <i class="fas fa-wallet"></i>
+                                    </div>
+                                </div>
+                                <div class="stat-card-value">$2,164.25</div>
+                                <div class="stat-card-change positive">
+                                    <i class="fas fa-arrow-up"></i> 5% from last month
+                                </div>
+                            </div>
+                            
+                            <div class="stat-card">
+                                <div class="stat-card-header">
+                                    <span class="stat-card-title">BUDGET STATUS</span>
+                                    <div class="stat-card-icon budget">
+                                        <i class="fas fa-bullseye"></i>
+                                    </div>
+                                </div>
+                                <div class="stat-card-value">68%</div>
+                                <div class="stat-card-change positive">
+                                    <i class="fas fa-arrow-down"></i> 32% remaining
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Charts Section -->
+                        <div class="charts-grid">
+                            <div class="chart-container">
+                                <div class="chart-header">
+                                    <h3 class="chart-title">Expense Trends</h3>
+                                    <div class="chart-options">
+                                        <span class="chart-option active" data-period="week">Week</span>
+                                        <span class="chart-option" data-period="month">Month</span>
+                                        <span class="chart-option" data-period="year">Year</span>
+                                    </div>
+                                </div>
+                                <div class="chart-area">
+                                    <canvas id="expenseTrendChart"></canvas>
+                                </div>
+                            </div>
+                            
+                            <div class="chart-container">
+                                <div class="chart-header">
+                                    <h3 class="chart-title">Expense Categories</h3>
+                                </div>
+                                <div class="chart-area">
+                                    <canvas id="expenseCategoryChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Recent Transactions -->
+                        <div class="transactions">
+                            <div class="transactions-header">
+                                <h3 class="transactions-title">Recent Transactions</h3>
+                                <a href="#" class="btn btn-outline">View All</a>
+                            </div>
+                            <ul class="transaction-list">
+                                <li class="transaction-item">
+                                    <div class="transaction-info">
+                                        <div class="transaction-category food">
+                                            <i class="fas fa-utensils"></i>
+                                        </div>
+                                        <div class="transaction-details">
+                                            <h4>Grocery Store</h4>
+                                            <span class="transaction-date">Today, 5:30 PM</span>
+                                        </div>
+                                    </div>
+                                    <div class="transaction-amount expense">-$65.35</div>
+                                </li>
+                                <li class="transaction-item">
+                                    <div class="transaction-info">
+                                        <div class="transaction-category transport">
+                                            <i class="fas fa-bus"></i>
+                                        </div>
+                                        <div class="transaction-details">
+                                            <h4>Uber Ride</h4>
+                                            <span class="transaction-date">Yesterday, 8:45 AM</span>
+                                        </div>
+                                    </div>
+                                    <div class="transaction-amount expense">-$12.50</div>
+                                </li>
+                                <li class="transaction-item">
+                                    <div class="transaction-info">
+                                        <div class="transaction-category shopping">
+                                            <i class="fas fa-shopping-bag"></i>
+                                        </div>
+                                        <div class="transaction-details">
+                                            <h4>Online Store</h4>
+                                            <span class="transaction-date">Apr 10, 2:20 PM</span>
+                                        </div>
+                                    </div>
+                                    <div class="transaction-amount expense">-$89.99</div>
+                                </li>
+                                <li class="transaction-item">
+                                    <div class="transaction-info">
+                                        <div class="transaction-category income">
+                                            <i class="fas fa-building"></i>
+                                        </div>
+                                        <div class="transaction-details">
+                                            <h4>Salary Deposit</h4>
+                                            <span class="transaction-date">Apr 8, 9:00 AM</span>
+                                        </div>
+                                    </div>
+                                    <div class="transaction-amount income">+$2,450.00</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Floating Action Button -->
+    <div class="floating-button">
+        <i class="fas fa-plus"></i>
+    </div>
+    
+    <script>
+        // Simple toggle for mobile menu
+        document.querySelector('.menu-toggle').addEventListener('click', function() {
+            document.querySelector('.nav-links').classList.toggle('active');
+        });
+        
+        // Chart.js implementation
+        // 1. Expense Trend Chart (Line Chart)
+        const trendChartCtx = document.getElementById('expenseTrendChart').getContext('2d');
+        let expenseTrendChart;
+        
+        // Function to initialize or update the trend chart based on period
+        function initTrendChart(period = 'week') {
+            // Sample data for different periods
+            const chartData = {
+                week: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    expenses: [65, 82, 45, 60, 120, 95, 78],
+                    income: [0, 0, 0, 0, 0, 0, 0]
+                },
+                month: {
+                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                    expenses: [320, 410, 275, 380],
+                    income: [850, 0, 1500, 2000]
+                },
+                year: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    expenses: [1250, 1100, 1350, 1450, 1200, 1800, 1600, 1750, 1400, 1300, 1200, 1100],
+                    income: [3500, 3500, 3500, 3800, 3800, 3800, 4000, 4000, 4000, 4350, 4350, 4350]
+                }
+            };
+            
+            const data = chartData[period];
+            
+            // Destroy existing chart if it exists
+            if (expenseTrendChart) {
+                expenseTrendChart.destroy();
+            }
+            
+            // Create new chart
+            expenseTrendChart = new Chart(trendChartCtx, {
+                type: 'line',
+                data: {
+                    labels: data.labels,
+                    datasets: [
+                        {
+                            label: 'Expenses',
+                            data: data.expenses,
+                            backgroundColor: 'rgba(231, 76, 60, 0.2)',
+                            borderColor: 'rgba(231, 76, 60, 1)',
+                            borderWidth: 2,
+                            tension: 0.3,
+                            fill: true,
+                            pointBackgroundColor: 'rgba(231, 76, 60, 1)',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            pointRadius: 4
+                        },
+                        {
+                            label: 'Income',
+                            data: data.income,
+                            backgroundColor: 'rgba(46, 204, 113, 0.2)',
+                            borderColor: 'rgba(46, 204, 113, 1)',
+                            borderWidth: 2,
+                            tension: 0.3,
+                            fill: true,
+                            pointBackgroundColor: 'rgba(46, 204, 113, 1)',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            pointRadius: 4,
+                            hidden: period === 'week' // Hide income for weekly view
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                boxWidth: 8
+                            }
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            backgroundColor: 'rgba(52, 73, 94, 0.9)',
+                            titleColor: '#ecf0f1',
+                            bodyColor: '#ecf0f1',
+                            borderColor: 'rgba(236, 240, 241, 0.2)',
+                            borderWidth: 1,
+                            cornerRadius: 6,
+                            padding: 10,
+                            displayColors: true,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += new Intl.NumberFormat('en-US', { 
+                                            style: 'currency', 
+                                            currency: 'USD' 
+                                        }).format(context.parsed.y);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                color: 'rgba(149, 165, 166, 0.1)'
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(149, 165, 166, 0.1)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // 2. Expense Category Chart (Doughnut Chart)
+        const categoryChartCtx = document.getElementById('expenseCategoryChart').getContext('2d');
+        const expenseCategoryChart = new Chart(categoryChartCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Food & Groceries', 'Housing & Utilities', 'Transportation', 'Shopping & Entertainment', 'Health', 'Other'],
+                datasets: [{
+                    data: [650, 800, 320, 205, 150, 60],
+                    backgroundColor: [
+                        '#e67e22', // Food
+                        '#3498db', // Housing
+                        '#9b59b6', // Transport
+                        '#1abc9c', // Shopping
+                        '#e74c3c', // Health
+                        '#95a5a6'  // Other
+                    ],
+                    borderColor: '#ffffff',
+                    borderWidth: 2,
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '65%',
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 20,
+                            font: {
+                                size: 12
+                            }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(52, 73, 94, 0.9)',
+                        titleColor: '#ecf0f1',
+                        bodyColor: '#ecf0f1',
+                        borderColor: 'rgba(236, 240, 241, 0.2)',
+                        borderWidth: 1,
+                        cornerRadius: 6,
+                        padding: 10,
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.parsed;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = Math.round((value / total) * 100);
+                                const formattedValue = new Intl.NumberFormat('en-US', { 
+                                    style: 'currency', 
+                                    currency: 'USD' 
+                                }).format(value);
+                                
+                                return `${label}: ${formattedValue} (${percentage}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Initialize trend chart with default period (week)
+        initTrendChart('week');
+        
+        // Set up event listeners for chart period options
+        document.querySelectorAll('.chart-option').forEach(option => {
+            option.addEventListener('click', function() {
+                // Remove active class from all options
+                document.querySelectorAll('.chart-option').forEach(opt => {
+                    opt.classList.remove('active');
+                });
+                
+                // Add active class to clicked option
+                this.classList.add('active');
+                
+                // Update chart with selected period
+                const period = this.getAttribute('data-period');
+                initTrendChart(period);
+            });
+        });
+    </script>
+</body>
+</html>
